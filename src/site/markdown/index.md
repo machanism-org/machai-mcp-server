@@ -1,23 +1,47 @@
 <!-- @guidance:
+Generate or update the content as follows.  
 **Important:** If any section or content already exists, update it with the latest and most accurate information instead of duplicating or skipping it.
-1. **Project Title and Overview:**  
-   - Provide the project name and a brief description based on `src/site/markdown/index.md` content summary.
-   - Add `[![Maven Central](https://img.shields.io/maven-central/v/org.machanism.machai/[artifactId].svg)](https://central.sonatype.com/artifact/org.machanism.machai/[artifactId])` and 
-     [![bindex](https://img.shields.io/badge/bindex-blue.svg)](https://raw.githubusercontent.com/machanism-org/machai/refs/heads/main/[artifactId]/bindex.json) in one line after the title as a new paragraph.
-3. **Introduction**
-   - Use from documentation folder: site/markdown/index.md
-2. **Usage:**  
-   - Use from documentation folder: site/markdown/index.md
-**Formatting Requirements:**
-- Use Markdown syntax for headings, lists, code blocks, and links.
-- Ensure clarity and conciseness in each section.
-- Organize the README for easy navigation and readability.
-- If used resources by uri: `src/site/resources/`, need to use project site location: `https://machai.machanism.org/[artifactId]/`.
+
+# Page Structure
+1. **Header**
+   - **Project Title:** Extract automatically from `pom.xml`.
+   - **Maven Central Badge:**  
+     Use the following Markdown, replacing `[groupId]` and `[artifactId]` with values from `pom.xml`:  
+     `[![Maven Central](https://img.shields.io/maven-central/v/[groupId]/[artifactId].svg)](https://central.sonatype.com/artifact/[groupId]/[artifactId])`
+   - Bindex Badge [![bindex](https://img.shields.io/badge/bindex-blue.svg)](https://raw.githubusercontent.com/machanism-org/machai/refs/heads/main/project-layout/bindex.json)
+2. **Introduction**
+   - Provide a comprehensive description of the project's purpose and main benefits.
+   - Clearly explain the core functionality and value proposition of the project.
+   Describe the project with diagrams bellow:
+     - Create a project structure overview based on the `.puml` files below.
+     - Describe the project without including file names in the description.
+     - Use the project structure diagram by the path: `./images/c4-diagram.png` (`src/site/puml/c4-diagram.puml`).
+5. **Key Features**
+   - Present a concise, bulleted list of the primary capabilities and features.
+6. **Getting Started**
+   - **Prerequisites:** List all required software, services, and environment settings.
+7. **CLI**  
+     Add a download link:  
+     [![Download Ghostwriter](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/machanism/files/machai/machai-mcp-server/releases/).
+   - **Basic Usage:** Provide an example command to run the application.
+   - **Typical Workflow:** Outline the step-by-step process for using the project artifacts.
+   - **Java Version:** State the required Java version as defined in `pom.xml`, and clarify any additional functional requirements.
+8. **Configuration**
+   - **Command-Line Options:** Analyze `src/main/java/org/machanism/machai/mcp/server/McpServer.java` to extract and describe all available command-line options.
+   - **Options Table:** Present a table listing each option, its description, and default value.
+   - **Example:** Provide a command-line example showing how to configure and run the application with custom parameters.
+9. **Resources**
+   - List relevant links, including the official platform, GitHub repository, and Maven Central page.
+# General Instructions
+- Ensure clarity, completeness, and accuracy in each section.
+- Use information from project files and source code as specified.
+- Structure the documentation for easy navigation and practical use.
 -->
 
 # Machai MCP Server
 
-[![Maven Central](https://img.shields.io/maven-central/v/org.machanism.machai/machai-mcp-server.svg)](https://central.sonatype.com/artifact/org.machanism.machai/machai-mcp-server) [![bindex](https://img.shields.io/badge/bindex-blue.svg)](https://raw.githubusercontent.com/machanism-org/machai/refs/heads/main/machai-mcp-server/bindex.json)
+[![Maven Central](https://img.shields.io/maven-central/v/org.machanism.machai/machai-mcp-server.svg)](https://central.sonatype.com/artifact/org.machanism.machai/machai-mcp-server)
+[![bindex](https://img.shields.io/badge/bindex-blue.svg)](https://raw.githubusercontent.com/machanism-org/machai/refs/heads/main/project-layout/bindex.json)
 
 ## Introduction
 
@@ -29,7 +53,7 @@ The core value of the project is that it turns Machai functional tool implementa
 
 The following diagram shows the high-level component structure and relationships within the project:
 
-![Project structure overview](https://machai.machanism.org/machai-mcp-server/images/c4-diagram.png)
+![Project structure overview](./images/c4-diagram.png)
 
 At a high level, the project contains:
 
@@ -126,7 +150,7 @@ The application entry point defines the following command-line options:
 - `-p`, `--port <number>`: starts the application as an HTTP MCP server and listens on the specified port.
 - `-s`, `--session`: uses streamable MCP server mode. This option is only meaningful for HTTP mode.
 
-If `--port` is omitted, the application starts in STDIO mode. If `--port` is provided, the application starts an HTTP server. When `--session` is provided together with `--port`, the HTTP server uses streamable transport; otherwise it uses stateless HTTP transport. The `--help` option prints the available options. In HTTP mode, console logging is enabled at runtime. If no project directory is configured in HTTP mode, the server logs a warning and determines the project directory from the client request when possible.
+If `--port` is omitted, the application starts in STDIO mode. If `--port` is provided, the application starts an HTTP server. When `--session` is provided together with `--port`, the HTTP server uses streamable transport; otherwise it uses stateless HTTP transport. The `--help` option prints the available options. If no project directory is configured in HTTP mode, the server logs a warning and determines the project directory from the client request when possible.
 
 ### Options Table
 
@@ -253,7 +277,7 @@ Start the inspector with:
 npx @modelcontextprotocol/inspector
 ```
 
-![MCP Inspector](https://machai.machanism.org/machai-mcp-server/images/mcp-inspector.png)
+![MCP Inspector](images/mcp-inspector.png)
 
 ### Claude Desktop
 
@@ -261,7 +285,7 @@ Claude Desktop is a practical client for connecting to both STDIO and HTTP deplo
 
 See more: [Desktop application](https://code.claude.com/docs/en/desktop)
 
-![Claude Desktop](https://machai.machanism.org/machai-mcp-server/images/claude-desktop.png)
+![Claude Desktop](images/claude-desktop.png)
 
 ### CodeMie Code
 
@@ -301,7 +325,7 @@ Launch the CLI tool as usual:
 codemie-claude
 ```
 
-![CodeMie Code](https://machai.machanism.org/machai-mcp-server/images/codemie-claude.png)
+![CodeMie Code](images/codemie-claude.png)
 
 ## Resources
 

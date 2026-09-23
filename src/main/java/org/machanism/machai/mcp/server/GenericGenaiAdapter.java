@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -129,7 +130,8 @@ public class GenericGenaiAdapter<E, S> extends AbstractAIProvider {
 		S spec = (S) builder.buildSpecification(tool, callHandler);
 
 		if (log.isInfoEnabled()) {
-			// SonarQube S2629: only calculate the abbreviated specification when it will be logged.
+			// SonarQube S2629: only calculate the abbreviated specification when it will be
+			// logged.
 			log.info("Registered tool '{}': {}", name, formatSpecification(spec));
 		}
 
@@ -174,15 +176,17 @@ public class GenericGenaiAdapter<E, S> extends AbstractAIProvider {
 	/**
 	 * Converts a given tool name into a human-readable kebab-case format.
 	 * 
-	 * <p>Examples:
+	 * <p>
+	 * Examples:
 	 * <ul>
-	 *   <li>{@code "myToolName"} becomes {@code "my-tool-name"}</li>
-	 *   <li>{@code "Already-Kebab"} becomes {@code "already-kebab"}</li>
-	 *   <li>{@code null} or {@code ""} returns {@code ""}</li>
+	 * <li>{@code "myToolName"} becomes {@code "my-tool-name"}</li>
+	 * <li>{@code "Already-Kebab"} becomes {@code "already-kebab"}</li>
+	 * <li>{@code null} or {@code ""} returns {@code ""}</li>
 	 * </ul>
 	 *
 	 * @param toolName the original tool name string to convert
-	 * @return the human-readable kebab-case representation, or an empty string if input is null or empty
+	 * @return the human-readable kebab-case representation, or an empty string if
+	 *         input is null or empty
 	 */
 	public static String toHumanReadable(String toolName) {
 		if (toolName == null || toolName.isEmpty()) {
@@ -218,6 +222,12 @@ public class GenericGenaiAdapter<E, S> extends AbstractAIProvider {
 	@Override
 	public String perform() {
 		return null;
+	}
+
+	@Override
+	public List<String> getToolNames() {
+		List<String> tools = toolSpecifications.stream().map(t -> t.toString()).collect(Collectors.toList());
+		return tools;
 	}
 
 }

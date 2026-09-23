@@ -174,18 +174,19 @@ public class GenericGenaiAdapter<E, S> extends AbstractAIProvider {
 	}
 
 	/**
-	 * Converts a given tool name into a human-readable kebab-case format.
+	 * Converts a given tool name into a human-readable title-case format.
 	 * 
 	 * <p>
 	 * Examples:
 	 * <ul>
-	 * <li>{@code "myToolName"} becomes {@code "my-tool-name"}</li>
-	 * <li>{@code "Already-Kebab"} becomes {@code "already-kebab"}</li>
+	 * <li>{@code "my_tool_name"} becomes {@code "My Tool Name"}</li>
+	 * <li>{@code "myToolName"} becomes {@code "My Tool Name"}</li>
+	 * <li>{@code "Already-Kebab"} becomes {@code "Already Kebab"}</li>
 	 * <li>{@code null} or {@code ""} returns {@code ""}</li>
 	 * </ul>
 	 *
 	 * @param toolName the original tool name string to convert
-	 * @return the human-readable kebab-case representation, or an empty string if
+	 * @return the human-readable representation, or an empty string if
 	 *         input is null or empty
 	 */
 	public static String toHumanReadable(String toolName) {
@@ -193,12 +194,13 @@ public class GenericGenaiAdapter<E, S> extends AbstractAIProvider {
 			return "";
 		}
 
-		String spaced = toolName.replace('-', ' ');
+		// Replace hyphens and underscores with spaces
+		String spaced = toolName.replace('-', ' ').replace('_', ' ');
 
 		// Insert spaces before uppercase letters (for camelCase)
 		spaced = spaced.replaceAll("([a-z])([A-Z])", "$1 $2");
 
-		// Capitalize each word
+		// Capitalize each word and join them with spaces
 		String[] words = spaced.split("\\s+");
 		StringBuilder result = new StringBuilder();
 		for (String word : words) {

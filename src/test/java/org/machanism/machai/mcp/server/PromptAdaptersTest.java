@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.machanism.machai.ai.tools.ParamDescriptor;
-import org.machanism.machai.ai.tools.Role;
-import org.machanism.machai.ai.tools.ToolFunction;
+import org.machanism.machai.process.tools.ParamDescriptor;
+import org.machanism.machai.process.tools.Role;
+import org.machanism.machai.process.tools.ToolFunction;
 
 import io.modelcontextprotocol.spec.McpSchema;
 

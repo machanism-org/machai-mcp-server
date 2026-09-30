@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.machanism.machai.ai.provider.AbstractAIProvider;
-import org.machanism.machai.ai.tools.ParamDescriptor;
-import org.machanism.machai.ai.tools.ToolFunction;
 import org.machanism.machai.mcp.server.AbstractMcpServer.ToolSpecificationBuilder;
+import org.machanism.machai.process.provider.AbstractAIProvider;
+import org.machanism.machai.process.tools.ParamDescriptor;
+import org.machanism.machai.process.tools.ToolFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +65,7 @@ public class GenericGenaiAdapter<E, S> extends AbstractAIProvider {
 	 * Register tool implementation for the adapter.
 	 * 
 	 * If you need to implement a custom tool use
-	 * {@link org.machanism.machai.ai.tools.FunctionTools}.
+	 * {@link org.machanism.machai.process.tools.FunctionTools}.
 	 *
 	 * @param name        the name of the tool
 	 * @param description the description of the tool

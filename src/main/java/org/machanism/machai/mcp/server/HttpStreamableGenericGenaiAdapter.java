@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import org.machanism.machai.ai.tools.ToolFunction;
 import org.machanism.machai.mcp.server.AbstractMcpServer.ToolSpecificationBuilder;
+import org.machanism.machai.process.tools.ToolFunction;
 
 import io.modelcontextprotocol.server.McpServerFeatures.SyncPromptSpecification;
 import io.modelcontextprotocol.server.McpServerFeatures.SyncToolSpecification;

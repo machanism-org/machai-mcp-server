@@ -13,8 +13,8 @@ import java.util.function.BiFunction;
 
 import org.junit.jupiter.api.Test;
 import org.machanism.macha.core.commons.configurator.Configurator;
-import org.machanism.machai.ai.tools.ParamDescriptor;
-import org.machanism.machai.ai.tools.ToolFunction;
+import org.machanism.machai.process.tools.ParamDescriptor;
+import org.machanism.machai.process.tools.ToolFunction;
 import org.mockito.Mockito;
 
 import io.modelcontextprotocol.spec.McpSchema;

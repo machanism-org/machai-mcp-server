@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import org.apache.commons.lang3.StringUtils;
-import org.machanism.machai.ai.tools.ParamDescriptor;
-import org.machanism.machai.ai.tools.ToolFunction;
 import org.machanism.machai.mcp.server.AbstractMcpServer.ToolSpecificationBuilder;
+import org.machanism.machai.process.tools.ParamDescriptor;
+import org.machanism.machai.process.tools.ToolFunction;
 
 import io.modelcontextprotocol.common.McpTransportContext;
 import io.modelcontextprotocol.server.McpStatelessServerFeatures;

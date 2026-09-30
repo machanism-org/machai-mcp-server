@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.machanism.machai.ai.tools.ParamDescriptor;
-import org.machanism.machai.ai.tools.Role;
-import org.machanism.machai.ai.tools.ToolFunction;
 import org.machanism.machai.mcp.server.AbstractMcpServer.ToolSpecificationBuilder;
+import org.machanism.machai.process.tools.ParamDescriptor;
+import org.machanism.machai.process.tools.Role;
+import org.machanism.machai.process.tools.ToolFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

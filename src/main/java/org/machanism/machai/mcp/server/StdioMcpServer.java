@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import org.machanism.macha.core.commons.configurator.Configurator;
-import org.machanism.machai.ai.tools.FunctionToolsLoader;
+import org.machanism.machai.process.tools.FunctionToolsLoader;
 
 import io.modelcontextprotocol.json.jackson3.JacksonMcpJsonMapper;
 import io.modelcontextprotocol.server.McpServer;

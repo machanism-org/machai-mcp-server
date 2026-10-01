@@ -33,7 +33,8 @@ public class HttpStatelessGenericGenaiAdapter extends
 	 * Creates an adapter backed by the supplied tool specification collection.
 	 *
 	 * @param toolSpecifications collection receiving generated tool specifications
-	 * @param builder builder that creates transport-specific tool specifications
+	 * @param builder            builder that creates transport-specific tool
+	 *                           specifications
 	 */
 	HttpStatelessGenericGenaiAdapter(List<SyncToolSpecification> toolSpecifications,
 			ToolSpecificationBuilder<McpTransportContext> builder) {
@@ -51,12 +52,14 @@ public class HttpStatelessGenericGenaiAdapter extends
 			ParamDescriptor... paramsDesc) {
 		String name = StringUtils.substringAfterLast(uri.getPath(), "/");
 		McpSchema.Resource resource = McpSchema.Resource.builder(uri.toString(), name).build();
-		BiFunction<McpTransportContext, McpSchema.ReadResourceRequest, McpSchema.ReadResourceResult> readHandler = (context,
+		BiFunction<McpTransportContext, McpSchema.ReadResourceRequest, McpSchema.ReadResourceResult> readHandler = (
+				context,
 				request) -> {
 			List<ResourceContents> contents = new ArrayList<>();
 			try {
-				Object result = function.apply(null, projectDir, getConfigurator(), uri);
-				contents.add(TextResourceContents.builder(uri.toString(), String.valueOf(result)).mimeType(mimeType).build());
+				Object result = function.apply(null, getProjectDir(), getConfigurator(), uri);
+				contents.add(TextResourceContents.builder(uri.toString(), String.valueOf(result)).mimeType(mimeType)
+						.build());
 			} catch (Exception exception) {
 				throw new IllegalArgumentException(exception);
 			}

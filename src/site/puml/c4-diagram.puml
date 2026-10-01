@@ -40,7 +40,7 @@ System_Boundary(machaiServer, "Machai MCP Server") {
 
 Rel(cliRuntime, entryPoint, "Launches and supplies options")
 Rel(entryPoint, configuration, "Loads")
-Rel(entryPoint, serverBase, "Sets project directory and passes configuration")
+Rel(entryPoint, serverBase, "Configures and starts selected server")
 Rel(entryPoint, stdioServer, "Selects when --port is absent")
 Rel(entryPoint, statelessServer, "Selects with --port without --session")
 Rel(entryPoint, streamableServer, "Selects with --port --session")

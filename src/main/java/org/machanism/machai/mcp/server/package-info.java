@@ -19,73 +19,72 @@
  */
 
 /**
- * Provides the synchronous Model Context Protocol (MCP) server runtime for
- * exposing Machai function tools, prompts, and, for stateless HTTP, resources.
- * The package contains the command-line launcher, transport-specific servers,
- * and adapters that translate Machai function definitions into MCP schemas and
- * request handlers.
+ * Provides the synchronous Model Context Protocol (MCP) server implementation
+ * used to expose Machai function tools and prompts to MCP clients.
  *
- * <h2>Common server behavior</h2>
- * <p>
- * {@link AbstractMcpServer} is the base for every server in this package. It
- * stores an optional project directory, reads the {@code enabledTools}
- * configuration value, and provides the contract for registering tools and
- * starting a server. A tool function receives decoded request arguments, the
- * configured project directory, and the active
- * {@code org.machanism.macha.core.commons.configurator.Configurator}. Functions
- * invoked through a stateful synchronous exchange also receive the exchange
- * session identifier. The
- * {@link org.machanism.machai.process.tools.FunctionToolsLoader} discovers and registers
- * the available function definitions, optionally restricted by
- * {@code enabledTools}.
- * </p>
- *
- * <h2>Adapters and MCP features</h2>
- * <p>
- * {@link GenericGenaiAdapter} converts
- * {@code org.machanism.machai.process.tools.ParamDescriptor} metadata into MCP
- * JSON Schema tool definitions and turns function results or failures into
- * {@code io.modelcontextprotocol.spec.McpSchema.CallToolResult} values.
- * {@link AbstractPromptGenaiAdapter} adds the
- * corresponding prompt registration and converts string, list, or serialized
- * function results into prompt messages. The concrete
- * {@link StdioGenaiAdapter}, {@link HttpStreamableGenericGenaiAdapter}, and
- * {@link HttpStatelessGenericGenaiAdapter} implementations build the
- * transport-specific specifications. The stateless adapter additionally maps
- * resource definitions to resource-read handlers; those handlers pass the
- * requested resource URI, project directory, and configurator to the function.
- * </p>
- *
- * <h2>Transport implementations</h2>
+ * <p>The package has three layers:</p>
  * <ul>
- * <li>{@link StdioMcpServer} builds a single-session synchronous MCP server
- * over standard input and output. It advertises tools, prompts, and logging and
- * installs a shutdown hook that closes the built server.</li>
- * <li>{@link HttpStatelessMcpServer} builds a stateless synchronous server over
- * a Jetty servlet. It advertises tools, prompts, and resources, and is suitable
- * when requests do not require a server-side session.</li>
- * <li>{@link HttpStreamableMcpServer} builds a streamable synchronous server
- * over a Jetty servlet and advertises tools and prompts while retaining the
- * transport session context.</li>
+ * <li>{@link AbstractMcpServer} holds the common project-directory and
+ * configuration behavior and defines the tool-registration and startup
+ * lifecycle.</li>
+ * <li>{@link GenericGenaiAdapter} and its prompt-aware subclass translate
+ * Machai {@code ToolFunction} and {@code ParamDescriptor} definitions into MCP
+ * tool schemas, invocation handlers, prompt definitions, and prompt results.
+ * The stateless HTTP adapter also translates resource definitions into resource
+ * read handlers.</li>
+ * <li>{@link StdioMcpServer}, {@link HttpStatelessMcpServer}, and
+ * {@link HttpStreamableMcpServer} supply STDIO, stateless HTTP, and streamable
+ * HTTP transports respectively. {@link AbstractHttpMcpServer} centralizes the
+ * Jetty connector, servlet, thread-pool, port, and startup setup shared by the
+ * HTTP implementations.</li>
+ * </ul>
+ *
+ * <h2>Tool and prompt execution</h2>
+ * <p>
+ * The server launcher discovers function-based tools through
+ * {@link org.machanism.machai.process.tools.FunctionToolsLoader}. The optional
+ * {@code enabledTools} configuration property limits registration; its values
+ * may be separated by spaces, commas, semicolons, or other whitespace. Tool
+ * parameters are represented as JSON Schema, required arguments are validated
+ * by the MCP client against that schema, and function results are serialized
+ * into MCP text content. Invocation failures are returned as error tool
+ * results. Prompt arguments are exposed as MCP prompt arguments; string,
+ * collection, and other serialized function results become prompt messages.
+ * Streamable exchanges additionally make their session identifier available to
+ * functions through the tool-function session parameter. Stateless exchanges
+ * do not have a session identifier.
+ * </p>
+ *
+ * <h2>Transport behavior</h2>
+ * <ul>
+ * <li>{@link StdioMcpServer} creates a single-session synchronous MCP server
+ * over standard input and output, with tools, prompts, and logging enabled.</li>
+ * <li>{@link HttpStatelessMcpServer} serves synchronous MCP requests through a
+ * Jetty servlet without retaining server-side session state. It advertises
+ * tools, prompts, and resources; resource functions receive the requested URI,
+ * configured project directory, and configurator.</li>
+ * <li>{@link HttpStreamableMcpServer} serves synchronous streamable HTTP
+ * requests through Jetty and preserves the exchange session context for tool
+ * and prompt calls.</li>
  * </ul>
  * <p>
- * {@link AbstractHttpMcpServer} supplies the shared Jetty connector, thread-pool
- * setup, servlet registration, and port configuration used by both HTTP
- * implementations. HTTP startup failures are reported as
- * {@link McpServerStartupException}.
+ * HTTP startup errors are wrapped in {@link McpServerStartupException}.
+ * Implementations report the Machai MCP homepage and icon metadata where the
+ * transport supports server implementation metadata.
  * </p>
  *
- * <h2>Command-line usage</h2>
+ * <h2>Starting the server</h2>
  * <p>
- * {@link McpServer} is the application entry point. Use {@code -n} or
- * {@code --name} and {@code -v} or {@code --version} to set server metadata;
- * use {@code -d} or {@code --projectDir} to provide the project directory; and
- * use {@code -c} or {@code --config} to load a properties file. When no config
- * path is supplied, the launcher attempts {@link McpServer#MCP_CONFIG_FILE_NAME}
- * ({@code mcp.properties}) and tolerates its absence. With no {@code -p} or
- * {@code --port}, it starts {@link StdioMcpServer}. Supplying a port starts
- * {@link HttpStatelessMcpServer}; adding {@code -s} or {@code --session} selects
- * {@link HttpStreamableMcpServer} instead.
+ * {@link McpServer#main(String[])} is the command-line entry point. Use
+ * {@code -n}/{@code --name} and {@code -v}/{@code --version} for server
+ * metadata, {@code -d}/{@code --projectDir} for the project directory, and
+ * {@code -c}/{@code --config} for an explicit properties file. Without an
+ * explicit configuration path, {@link McpServer} attempts
+ * {@link McpServer#MCP_CONFIG_FILE_NAME} ({@code mcp.properties}) and tolerates
+ * that default file being absent. Without {@code -p}/{@code --port}, it starts
+ * {@link StdioMcpServer}; with a port, it starts
+ * {@link HttpStatelessMcpServer}, or {@link HttpStreamableMcpServer} when
+ * {@code -s}/{@code --session} is also supplied.
  * </p>
  *
  * @author Viktor Tovstyi

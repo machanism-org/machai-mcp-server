@@ -16,15 +16,15 @@ title Machai MCP Server — C4 Component Diagram
 
 Person(mcpClient, "MCP Client", "IDE, AI assistant, or other MCP consumer")
 System_Ext(cliRuntime, "CLI Runtime", "Launches the server and supplies command-line options")
-System_Ext(configuration, "Configuration", "mcp.properties or a file selected with --config")
+System_Ext(configuration, "Configuration", "PropertiesConfigurator reading mcp.properties or a file selected with --config")
 System_Ext(projectWorkspace, "Project Workspace", "Optional directory supplied with --projectDir")
-System_Ext(functionTools, "Machai Tool Framework", "FunctionToolsLoader discovers enabled ToolFunction implementations and invokes them")
+System_Ext(functionTools, "Machai Tool Framework", "FunctionToolsLoader discovers enabled ToolFunction implementations and applies them to adapters")
 System_Ext(mcpSdk, "MCP Java SDK", "MCP server builders, schemas, and transport providers")
 System_Ext(jetty, "Jetty", "Embedded HTTP servlet container")
 
 System_Boundary(machaiServer, "Machai MCP Server") {
   Component(entryPoint, "McpServer", "Java application entry point", "Parses CLI options, loads configuration, selects a transport, configures the server, and starts it")
-  Component(serverBase, "AbstractMcpServer", "Server base class", "Stores the project directory, reads enabledTools, and defines tool registration and startup hooks")
+  Component(serverBase, "AbstractMcpServer", "Server base class", "Stores the project directory, filters enabledTools, and defines tool registration and startup hooks")
   Component(httpBase, "AbstractHttpMcpServer", "HTTP server base class", "Stores the port and transport servlet, configures Jetty, and mounts the servlet")
 
   Component(stdioServer, "StdioMcpServer", "STDIO transport server", "Builds a single-session MCP server and registers tools and prompts")
@@ -32,14 +32,14 @@ System_Boundary(machaiServer, "Machai MCP Server") {
   Component(streamableServer, "HttpStreamableMcpServer", "Streamable HTTP transport server", "Builds a session-aware MCP server and registers tools and prompts")
 
   Component(genericAdapter, "GenericGenaiAdapter", "Tool adapter base", "Converts tool metadata into MCP schemas and handlers; executes tools and maps results or errors")
-  Component(promptAdapter, "AbstractPromptGenaiAdapter", "Prompt adapter base", "Extends the tool adapter with MCP prompt schemas, handlers, and role-aware results")
+  Component(promptAdapter, "AbstractPromptGenaiAdapter", "Prompt adapter base", "Extends the tool adapter with MCP prompt schemas, handlers, session data, and role-aware results")
   Component(stdioAdapter, "StdioGenaiAdapter", "STDIO adapter", "Provides STDIO tool and prompt specifications")
   Component(statelessAdapter, "HttpStatelessGenericGenaiAdapter", "Stateless HTTP adapter", "Provides stateless tool, prompt, and resource specifications")
   Component(streamableAdapter, "HttpStreamableGenericGenaiAdapter", "Streamable HTTP adapter", "Provides streamable tool and prompt specifications")
 }
 
 Rel(cliRuntime, entryPoint, "Launches and supplies options")
-Rel(entryPoint, configuration, "Loads")
+Rel(entryPoint, configuration, "Loads properties through")
 Rel(entryPoint, serverBase, "Configures and starts selected server")
 Rel(entryPoint, stdioServer, "Selects when --port is absent")
 Rel(entryPoint, statelessServer, "Selects with --port without --session")

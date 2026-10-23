@@ -10,5 +10,8 @@
     <release version="1.2" date="2026-06-30" description="Enhances Bindex tooling, configuration handling, and project automation capabilities while improving reliability across workflows.">
       <action dev="dev" type="add">Added an MCP server module with stateless and streamable server support, configurable parameters, prompt publishing, and server-specific credential handling.</action>
     </release>
+    <release version="1.4.2" date="2026-10-23" description="Updated MCP server integrations for the renamed Machai process tooling and provider APIs.">
+      <action dev="dev" type="refactor">Migrated MCP server provider integrations to the renamed Machai process provider and tooling APIs.</action>
+    </release>
   </body>
 </document>

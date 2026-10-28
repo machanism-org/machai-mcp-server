@@ -8,6 +8,7 @@ Generate or update the content as follows.
    - **Maven Central Badge:**  
      Use the following Markdown, replacing `[groupId]` and `[artifactId]` with values from `pom.xml`:  
      `[![Maven Central](https://img.shields.io/maven-central/v/[groupId]/[artifactId].svg)](https://central.sonatype.com/artifact/[groupId]/[artifactId])`
+   - [![Download](https://img.shields.io/sourceforge/dt/machanism/machai%2F[artifactId]%2Freleases)](https://sourceforge.net/projects/machanism/files/machai/[artifactId]/releases/)
    - Bindex Badge [![bindex](https://img.shields.io/badge/bindex-blue.svg)](https://raw.githubusercontent.com/machanism-org/[artifactId]/refs/heads/main/bindex.json)
 2. **Introduction**
    - Provide a comprehensive description of the project's purpose and main benefits.
@@ -41,6 +42,7 @@ Generate or update the content as follows.
 # Machai MCP Server
 
 [![Maven Central](https://img.shields.io/maven-central/v/org.machanism.machai/machai-mcp-server.svg)](https://central.sonatype.com/artifact/org.machanism.machai/machai-mcp-server)
+[![Download](https://img.shields.io/sourceforge/dt/machanism/machai%2Fmachai-mcp-server%2Freleases)](https://sourceforge.net/projects/machanism/files/machai/machai-mcp-server/releases/)
 [![bindex](https://img.shields.io/badge/bindex-blue.svg)](https://raw.githubusercontent.com/machanism-org/machai-mcp-server/refs/heads/main/bindex.json)
 
 ## Introduction
@@ -81,7 +83,7 @@ At a high level, the project contains:
 
 Before running Machai MCP Server, ensure you have:
 
-- Java 17 or newer, matching the `maven.compiler.release` value in `pom.xml`
+- Java 17, matching the `maven.compiler.release` value in `pom.xml`
 - Maven, if you plan to build the project from source
 - the `MACHANISM_PACK_DIR` environment variable set to a writable directory when building with the `pack` profile; the assembled release jar is written beneath this directory
 - one or more Machai-compatible functional tool or prompt libraries on the runtime classpath; the server does not publish built-in tools by itself
@@ -330,7 +332,7 @@ codemie-claude
 ## Resources
 
 - Official Machai platform: [https://machai.machanism.org/](https://machai.machanism.org/)
-- GitHub repository: [https://github.com/machanism-org/machai](https://github.com/machanism-org/machai)
+- GitHub repository: [https://github.com/machanism-org/machai-mcp-server](https://github.com/machanism-org/machai-mcp-server)
 - Maven Central artifact: [https://central.sonatype.com/artifact/org.machanism.machai/machai-mcp-server](https://central.sonatype.com/artifact/org.machanism.machai/machai-mcp-server)
 - Machai Functional Tools documentation: [https://machai.machanism.org/genai-client/functional-tools.html](https://machai.machanism.org/genai-client/functional-tools.html)
 - SourceForge releases: [https://sourceforge.net/projects/machanism/files/machai/machai-mcp-server/releases/](https://sourceforge.net/projects/machanism/files/machai/machai-mcp-server/releases/)

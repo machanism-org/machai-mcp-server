@@ -17,7 +17,9 @@
 
 # Machai MCP Server
 
-[![Maven Central](https://img.shields.io/maven-central/v/org.machanism.machai/machai-mcp-server.svg)](https://central.sonatype.com/artifact/org.machanism.machai/machai-mcp-server) [![bindex](https://img.shields.io/badge/bindex-blue.svg)](https://raw.githubusercontent.com/machanism-org/machai/refs/heads/main/machai-mcp-server/bindex.json)
+[![Maven Central](https://img.shields.io/maven-central/v/org.machanism.machai/machai-mcp-server.svg)](https://central.sonatype.com/artifact/org.machanism.machai/machai-mcp-server)
+[![Download](https://img.shields.io/sourceforge/dt/machanism/machai%2Fmachai-mcp-server%2Freleases)](https://sourceforge.net/projects/machanism/files/machai/machai-mcp-server/releases/)
+[![bindex](https://img.shields.io/badge/bindex-blue.svg)](https://raw.githubusercontent.com/machanism-org/machai/refs/heads/main/machai-mcp-server/bindex.json)
 
 ## Introduction
 
@@ -57,7 +59,7 @@ At a high level, the project contains:
 
 Before running Machai MCP Server, ensure you have:
 
-- Java 17 or newer, matching the `maven.compiler.release` value in `pom.xml`
+- Java 17, matching the `maven.compiler.release` value in `pom.xml`
 - Maven, if you plan to build the project from source
 - the `MACHANISM_PACK_DIR` environment variable set to a writable directory when building with the `pack` profile; the assembled release jar is written beneath this directory
 - one or more Machai-compatible functional tool or prompt libraries on the runtime classpath; the server does not publish built-in tools by itself
@@ -126,7 +128,7 @@ The application entry point defines the following command-line options:
 - `-p`, `--port <number>`: starts the application as an HTTP MCP server and listens on the specified port.
 - `-s`, `--session`: uses streamable MCP server mode. This option is only meaningful for HTTP mode.
 
-If `--port` is omitted, the application starts in STDIO mode. If `--port` is provided, the application starts an HTTP server. When `--session` is provided together with `--port`, the HTTP server uses streamable transport; otherwise it uses stateless HTTP transport. The `--help` option prints the available options. In HTTP mode, console logging is enabled at runtime. If no project directory is configured in HTTP mode, the server logs a warning and determines the project directory from the client request when possible.
+If `--port` is omitted, the application starts in STDIO mode. If `--port` is provided, the application starts an HTTP server. When `--session` is provided together with `--port`, the HTTP server uses streamable transport; otherwise it uses stateless HTTP transport. The `--help` option prints the available options. If no project directory is configured in HTTP mode, the server logs a warning and determines the project directory from the client request when possible.
 
 ### Options Table
 
@@ -306,8 +308,8 @@ codemie-claude
 ## Resources
 
 - Official Machai platform: [https://machai.machanism.org/](https://machai.machanism.org/)
-- GitHub repository: [https://github.com/machanism-org/machai](https://github.com/machanism-org/machai)
+- GitHub repository: [https://github.com/machanism-org/machai-mcp-server](https://github.com/machanism-org/machai-mcp-server)
 - Maven Central artifact: [https://central.sonatype.com/artifact/org.machanism.machai/machai-mcp-server](https://central.sonatype.com/artifact/org.machanism.machai/machai-mcp-server)
 - Machai Functional Tools documentation: [https://machai.machanism.org/genai-client/functional-tools.html](https://machai.machanism.org/genai-client/functional-tools.html)
 - SourceForge releases: [https://sourceforge.net/projects/machanism/files/machai/machai-mcp-server/releases/](https://sourceforge.net/projects/machanism/files/machai/machai-mcp-server/releases/)
-- Model Context Protocol Inspector: [https://modelcontextprotocol.io/docs/tools/inspector](https://modelcontextprotocol.io/docs/tools/inspector)
+- Model Context Protocol Inspector: [https://modelcontextprotocol.io/docs/tools/inspector](https://modelcontextprotocol.io/docs/tools/inspector)\n

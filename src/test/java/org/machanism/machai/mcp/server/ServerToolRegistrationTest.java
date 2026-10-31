@@ -3,6 +3,7 @@ package org.machanism.machai.mcp.server;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 import org.machanism.macha.core.commons.configurator.Configurator;
@@ -24,7 +25,7 @@ class ServerToolRegistrationTest {
     }
 
     @Test
-    void statelessHttpServerRegistersEmptyToolPromptAndResourceCollections() {
+    void statelessHttpServerRegistersEmptyToolPromptAndResourceCollections() throws IOException {
         // Arrange
         HttpStatelessMcpServer server = new HttpStatelessMcpServer("test", "1");
         Configurator config = Mockito.mock(Configurator.class);
@@ -36,7 +37,7 @@ class ServerToolRegistrationTest {
     }
 
     @Test
-    void streamableHttpServerRegistersEmptyToolAndPromptCollections() {
+    void streamableHttpServerRegistersEmptyToolAndPromptCollections() throws IOException {
         // Arrange
         HttpStreamableMcpServer server = new HttpStreamableMcpServer("test", "1");
         Configurator config = Mockito.mock(Configurator.class);

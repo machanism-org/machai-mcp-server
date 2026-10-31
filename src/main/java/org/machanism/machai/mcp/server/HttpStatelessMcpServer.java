@@ -1,5 +1,8 @@
 package org.machanism.machai.mcp.server;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -72,6 +75,7 @@ public class HttpStatelessMcpServer extends AbstractHttpMcpServer {
 	 *
 	 * @param name    the server name to report in the MCP API
 	 * @param version the server version to report in the MCP API
+	 * @throws IOException 
 	 */
 	public HttpStatelessMcpServer(String name, String version) {
 		super();
@@ -83,7 +87,7 @@ public class HttpStatelessMcpServer extends AbstractHttpMcpServer {
 				.prompts(true)
 				.resources(true, false)
 				.tools(true);
-
+		
 		server = McpServer.sync(transportProvider)
 				.serverInfo(Implementation.builder(name, version)
 						.websiteUrl(MACHAI_MACHANISM_HOMEPAGE)
@@ -91,6 +95,13 @@ public class HttpStatelessMcpServer extends AbstractHttpMcpServer {
 								.builder(MACHAI_MACHANISM_ICON).build()))
 						.build())
 				.capabilities(tools.build());
+		
+		try (InputStream in = HttpStreamableMcpServer.class.getResourceAsStream(MCP_INSTRUCTIONS_PATH)) {
+			String instructions = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+			server.instructions(instructions);
+		} catch (IOException | NullPointerException e) {
+			log.warn("MCP instructions file not found at '{}'.", MCP_INSTRUCTIONS_PATH);
+		}
 
 		setTransportProvider(transportProvider);
 	}

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ class HttpServerInfrastructureTest {
     }
 
     @Test
-    void httpServersWrapInfrastructureStartupFailures() {
+    void httpServersWrapInfrastructureStartupFailures() throws IOException {
         // Arrange
         HttpStatelessMcpServer stateless = new HttpStatelessMcpServer("test", "1");
         HttpStreamableMcpServer streamable = new HttpStreamableMcpServer("test", "1");
@@ -62,7 +63,7 @@ class HttpServerInfrastructureTest {
     }
 
     @Test
-    void concreteServersExposeConfiguredTransportAndBuildToolSpecifications() {
+    void concreteServersExposeConfiguredTransportAndBuildToolSpecifications() throws IOException {
         HttpStatelessMcpServer stateless = new HttpStatelessMcpServer("test", "1");
         HttpStreamableMcpServer streamable = new HttpStreamableMcpServer("test", "1");
         McpSchema.Tool tool = McpSchema.Tool.builder("tool", Map.of("type", "object")).build();

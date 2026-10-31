@@ -30,6 +30,8 @@ public abstract class AbstractHttpMcpServer extends AbstractMcpServer {
 	 */
 	private final Logger log = LoggerFactory.getLogger(AbstractHttpMcpServer.class);
 
+	public static final String MCP_INSTRUCTIONS_PATH = "/mcp/mcp-instructions.md";
+
 	/**
 	 * The port number on which the HTTP server will listen.
 	 */

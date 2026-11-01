@@ -1,6 +1,7 @@
 package org.machanism.machai.mcp.server;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -45,6 +46,8 @@ import org.slf4j.LoggerFactory;
  * @author Viktor Tovstyi
  */
 public class McpServer {
+
+	private static final String SPECIFIC_MCP_SERVER_PROPERTIES = "mcp-server.properties";
 
 	private static final Logger log = LoggerFactory.getLogger(McpServer.class);
 
@@ -101,11 +104,11 @@ public class McpServer {
 			configurationFile = cmd.getOptionValue('c');
 		}
 
-		PropertiesConfigurator config = getConfigurator(configurationFile);
+		PropertiesConfigurator config = getConfigurator(configurationFile, projectDir);
 
-		String name = cmd.getOptionValue('n', "mcp-machai-server");
-		String version = cmd.getOptionValue('v',
-				Objects.toString(StdioMcpServer.class.getPackage().getImplementationVersion(), "latest"));
+		String name = cmd.getOptionValue('n', config.get("mcp.server.name", "mcp-machai-server"));
+		String version = cmd.getOptionValue('v', config.get("mcp.server.version",
+				Objects.toString(StdioMcpServer.class.getPackage().getImplementationVersion(), "latest")));
 
 		AbstractMcpServer mcpServer;
 		if (cmd.hasOption("p")) {
@@ -137,22 +140,35 @@ public class McpServer {
 	}
 
 	/**
-	 * Creates a configurator and loads the requested properties file.
-	 * If no file is specified, a missing default file is tolerated.
+	 * Creates a configurator and loads the requested properties file. If no file is
+	 * specified, a missing default file is tolerated.
 	 *
 	 * @param configFile configuration file path, or {@code null} to use
 	 *                   {@link #MCP_CONFIG_FILE_NAME}
+	 * @param projectDir
 	 * @return configured properties reader
 	 * @throws IOException if an explicitly requested file cannot be loaded
 	 */
-	public static PropertiesConfigurator getConfigurator(String configFile) throws IOException {
+	public static PropertiesConfigurator getConfigurator(String configFile, File projectDir) throws IOException {
 		PropertiesConfigurator configurator = new PropertiesConfigurator();
 		try {
-			String configPath = configFile != null ? configFile : MCP_CONFIG_FILE_NAME;
+			String customConfiguration = MCP_CONFIG_FILE_NAME;
+			try {
+				configurator.setConfiguration(SPECIFIC_MCP_SERVER_PROPERTIES);
+				customConfiguration = configurator.get("custom_configuration", null);
+			} catch (FileNotFoundException e) {
+				log.debug("Server-specific file `" + SPECIFIC_MCP_SERVER_PROPERTIES + "` not found.");
+			}
+
+			String configPath = configFile != null ? configFile : customConfiguration;
+
+			if (projectDir != null && !new File(configPath).isAbsolute()) {
+				configPath = new File(projectDir, configPath).getAbsolutePath();
+			}
+
 			configurator.setConfiguration(configPath);
-			// SonarQube S2629/S3457: defer formatting until the INFO level is enabled.
 			log.info("Configuration successfully loaded from: {}", configPath);
-			
+
 		} catch (IOException e) {
 			if (configFile != null) {
 				throw e;

@@ -17,8 +17,8 @@ class McpServerTest {
             writer.write("key=value\n");
         }
 
-        assertNotNull(McpServer.getConfigurator(properties.getAbsolutePath()));
-        assertNotNull(McpServer.getConfigurator(null));
-        assertThrows(java.io.IOException.class, () -> McpServer.getConfigurator("missing-file.properties"));
+        assertNotNull(McpServer.getConfigurator(properties.getAbsolutePath(), null));
+        assertNotNull(McpServer.getConfigurator(null, null));
+        assertThrows(java.io.IOException.class, () -> McpServer.getConfigurator("missing-file.properties", null));
     }
 }

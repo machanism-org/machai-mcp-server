@@ -116,8 +116,6 @@ public class HttpStatelessMcpServer extends AbstractHttpMcpServer {
 	 * @param config configuration source for tool loading and execution
 	 */
 	public void tools(Configurator config) {
-		log.info("Registering GenAI tools with MCP server...");
-
 		List<McpStatelessServerFeatures.SyncToolSpecification> toolSpecifications = new ArrayList<>();
 		HttpStatelessGenericGenaiAdapter httpAdapter = new HttpStatelessGenericGenaiAdapter(
 				toolSpecifications, new HttpStatelessToolSpecificationBuilder());

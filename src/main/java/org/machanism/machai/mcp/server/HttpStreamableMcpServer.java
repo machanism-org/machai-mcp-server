@@ -115,8 +115,6 @@ public class HttpStreamableMcpServer extends AbstractHttpMcpServer {
 	 */
 	@Override
 	public void tools(Configurator config) {
-		log.info("Registering GenAI tools with MCP server...");
-
 		List<SyncToolSpecification> toolSpecifications = new ArrayList<>();
 
 		HttpStreamableGenericGenaiAdapter httpAdapter = new HttpStreamableGenericGenaiAdapter(

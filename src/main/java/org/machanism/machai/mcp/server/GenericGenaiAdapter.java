@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.machanism.machai.mcp.server.AbstractMcpServer.ToolSpecificationBuilder;
 import org.machanism.machai.process.provider.AbstractAIProvider;
@@ -130,18 +129,10 @@ public class GenericGenaiAdapter<E, S> extends AbstractAIProvider {
 		S spec = (S) builder.buildSpecification(tool, callHandler);
 
 		if (log.isInfoEnabled()) {
-			// SonarQube S2629: only calculate the abbreviated specification when it will be
-			// logged.
-			log.info("Registered tool '{}': {}", name, formatSpecification(spec));
+			log.info("Registered tool: '{}'", name);
 		}
 
 		toolSpecifications.add(spec);
-	}
-
-	private static String formatSpecification(Object specification) {
-		return StringUtils.abbreviate(specification.toString(), AbstractAIProvider.LOG_LINE_LENG)
-				.replace(AbstractAIProvider.LINE_SEPARATOR, " ")
-				.replace("\r", "");
 	}
 
 	/**
@@ -186,8 +177,8 @@ public class GenericGenaiAdapter<E, S> extends AbstractAIProvider {
 	 * </ul>
 	 *
 	 * @param toolName the original tool name string to convert
-	 * @return the human-readable representation, or an empty string if
-	 *         input is null or empty
+	 * @return the human-readable representation, or an empty string if input is
+	 *         null or empty
 	 */
 	public static String toHumanReadable(String toolName) {
 		if (toolName == null || toolName.isEmpty()) {

@@ -167,7 +167,7 @@ public class McpServer {
 			}
 
 			configurator.setConfiguration(configPath);
-			log.info("Configuration successfully loaded from: {}", configPath);
+			log.info("Custom configuration: {}", configPath);
 
 		} catch (IOException e) {
 			if (configFile != null) {

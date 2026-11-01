@@ -78,8 +78,6 @@ public abstract class AbstractHttpMcpServer extends AbstractMcpServer {
 	 * @throws Exception if the server fails to start
 	 */
 	protected void startHttpServer() throws Exception {
-		log.info("Starting MCP HTTP server on port {}...", getPort());
-
 		QueuedThreadPool threadPool = new QueuedThreadPool();
 		threadPool.setName("server");
 

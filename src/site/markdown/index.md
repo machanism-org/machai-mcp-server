@@ -59,12 +59,14 @@ The following diagram shows the high-level component structure and relationships
 
 At a high level, the project contains:
 
-- a bootstrap layer that parses command-line arguments, configures server metadata, and selects the runtime transport
+- a bootstrap layer that parses command-line arguments, loads configuration, configures server metadata, and selects the runtime transport
 - a shared MCP server abstraction that manages common server setup, project-directory context, tool registration, and startup behavior
 - STDIO transport support for local client integrations that communicate through process input and output
 - HTTP transport support for remote MCP access, including stateless and streamable session-oriented modes
-- an adapter layer that converts discovered Machai functional tools and prompts into MCP-compatible definitions and handlers
-- embedded web hosting that exposes the MCP endpoint when the server is launched in HTTP mode
+- an adapter layer that converts discovered Machai functional tools and prompts into MCP-compatible definitions and handlers, maps results and errors, and exposes resource handlers in stateless HTTP mode
+- embedded Jetty web hosting that exposes the MCP endpoint when the server is launched in HTTP mode
+
+The MCP client communicates with the selected transport, which registers capabilities through transport-specific adapters backed by shared schema and invocation logic. The Machai tool framework loads enabled functions from extension libraries and executes them with the loaded configuration and project workspace. STDIO and streamable HTTP expose tools and prompts; stateless HTTP additionally exposes resources.
 
 ## Key Features
 
@@ -72,6 +74,8 @@ At a high level, the project contains:
 - Supports stateless HTTP mode and streamable HTTP mode for clients that require session-aware communication
 - Discovers custom Machai functional tools and prompts from libraries available on the runtime classpath
 - Converts tool metadata and parameter definitions into MCP-compatible schemas automatically
+- Exposes resources supplied by extensions in stateless HTTP mode
+- Filters loaded functions using the `enabledTools` configuration setting
 - Allows the server name and version reported to clients to be configured at launch time
 - Supports an optional project directory that tools can use as execution context
 - Uses Maven-based packaging, including an assembly profile for a runnable jar with dependencies
@@ -83,13 +87,14 @@ At a high level, the project contains:
 
 Before running Machai MCP Server, ensure you have:
 
-- Java 17, matching the `maven.compiler.release` value in `pom.xml`
+- Java 17 or later, matching the Java 17 compilation target (`maven.compiler.release`) in `pom.xml`; use a JDK to build from source
 - Maven, if you plan to build the project from source
 - the `MACHANISM_PACK_DIR` environment variable set to a writable directory when building with the `pack` profile; the assembled release jar is written beneath this directory
 - one or more Machai-compatible functional tool or prompt libraries on the runtime classpath; the server does not publish built-in tools by itself
 - environment variables, credentials, model names, or service settings required by the loaded tools and their AI providers
 - network access and an available TCP port if you plan to run HTTP mode
 - an MCP-compatible client such as Claude Desktop, MCP Inspector, CodeMie Code, or another client that can connect to STDIO or HTTP MCP servers
+- Node.js and npm (including `npx`) if using MCP Inspector or the `mcp-remote` bridge; these are not required by the Java server itself
 
 ### Build
 
@@ -117,6 +122,12 @@ Run the server in STDIO mode by placing the server jar and at least one function
 java -cp /path/to/machai-mcp-server.jar:/path/to/functional-tool-container.jar org.machanism.machai.mcp.server.McpServer
 ```
 
+These commands use the release jar with dependencies. If using the ordinary Maven build artifact, also include its runtime dependencies on the classpath. The examples use the Unix classpath separator `:`; on Windows use `;` and quote the classpath, for example:
+
+```powershell
+java -cp "machai-mcp-server.jar;functional-tool-container.jar" org.machanism.machai.mcp.server.McpServer
+```
+
 Run the server in HTTP mode by providing a port:
 
 ```bash
@@ -136,7 +147,7 @@ java -cp /path/to/machai-mcp-server.jar:/path/to/functional-tool-container.jar o
 
 ### Java Version
 
-The project requires Java 17, as defined by the Maven compiler release. Functional operation also depends on the additional tool libraries supplied at runtime and any services, credentials, model configuration, or project files those tools require.
+The project targets Java 17, as defined by the Maven compiler release, and requires Java 17 or later at runtime. Functional operation also depends on the additional tool libraries supplied at runtime and any services, credentials, model configuration, or project files those tools require. The server itself does not require a particular AI provider or model.
 
 ## Configuration
 
@@ -147,7 +158,7 @@ The application entry point defines the following command-line options:
 - `-h`, `--help`: shows the command-line help message and prints the available options before continuing with normal startup processing.
 - `-d`, `--projectDir <path>`: specifies the project directory path. This value is passed to the MCP server and can be used by tools as execution context.
 - `-n`, `--name <value>`: specifies the MCP server name exposed to clients.
-- `-c`, `--config <path>`: specifies the configuration file path used to initialize the server's properties configurator. When omitted, the server attempts to load `mcp.properties`; a missing default file is tolerated, while an explicitly supplied file must be readable.
+- `-c`, `--config <path>`: specifies the configuration file path used to initialize the server's properties configurator, overriding the automatically selected custom configuration. Relative paths are resolved against `--projectDir` when supplied. A missing automatically selected file is tolerated, while an explicitly supplied file must be readable.
 - `-v`, `--version <value>`: specifies the MCP server version exposed to clients.
 - `-p`, `--port <number>`: starts the application as an HTTP MCP server and listens on the specified port.
 - `-s`, `--session`: uses streamable MCP server mode. This option is only meaningful for HTTP mode.
@@ -160,11 +171,27 @@ If `--port` is omitted, the application starts in STDIO mode. If `--port` is pro
 |---|---|---|
 | `-h`, `--help` | Show the help message and print available options before continuing with startup. | Not enabled |
 | `-d`, `--projectDir <path>` | Set the project directory path used by tools as their execution context. | Not set; in HTTP mode it may be determined from the client request |
-| `-n`, `--name <value>` | Set the MCP server name exposed to clients. | `mcp-machai-server` |
-| `-c`, `--config <path>` | Set the configuration file path for server properties. | `mcp.properties`; a missing default file is tolerated |
-| `-v`, `--version <value>` | Set the MCP server version exposed to clients. | Package implementation version, or `latest` when package metadata is unavailable |
+| `-n`, `--name <value>` | Set the MCP server name exposed to clients. | Configuration value `mcp.server.name`, falling back to `mcp-machai-server` |
+| `-c`, `--config <path>` | Set the configuration file path for server properties. | `custom_configuration` from `mcp-server.properties` when that file loads; otherwise `mcp.properties`. Missing automatically selected files are tolerated |
+| `-v`, `--version <value>` | Set the MCP server version exposed to clients. | Configuration value `mcp.server.version`, falling back to the package implementation version, or `latest` when package metadata is unavailable |
 | `-p`, `--port <number>` | Start the server in HTTP mode and listen on the specified port. | Not set; STDIO mode is used |
 | `-s`, `--session` | Use streamable MCP server mode for HTTP transport. | Disabled; stateless HTTP mode is used when `--port` is set |
+
+### Configuration Loading
+
+The bootstrap first attempts to load `mcp-server.properties`. If it is absent, the automatic custom configuration path is `mcp.properties`; if it loads, its `custom_configuration` value selects that path. `--config` overrides the selection. A relative selected path is resolved against `--projectDir`, or otherwise left for the configurator to resolve. Command-line name and version values override the corresponding configuration values.
+
+**Current implementation caveat:** If `mcp-server.properties` loads but does not supply `custom_configuration`, the selected path is null. Supply a valid `custom_configuration` value or pass `--config` explicitly to avoid startup failure; this case is not covered by the missing-default-file handling.
+
+The loaded configuration is also passed to the tool framework and invocation handlers. For example:
+
+```properties
+mcp.server.name=my-mcp-server
+mcp.server.version=1.0.0
+enabledTools=toolA,toolB
+```
+
+Replace the illustrative tool names with names published by your extension libraries. `enabledTools` accepts names separated by spaces, commas, semicolons, tabs, or newlines; when omitted, no enabled-tool restriction is supplied to the loader.
 
 ### Example
 

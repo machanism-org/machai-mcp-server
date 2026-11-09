@@ -3,15 +3,20 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/changes/2.0.0 https://maven.apache.org/xsd/changes-2.0.0.xsd">
   <body>
+    <release version="1.4.3" date="2026-11-09" description="Improved HTTP MCP server support and configuration handling while reducing redundant startup logging.">
+      <action dev="dev" type="update">Enhanced support for HTTP MCP servers.</action>
+      <action dev="dev" type="fix">Improved MCP configuration file selection and handling.</action>
+      <action dev="dev" type="update">Reduced redundant MCP server startup and tool-registration logging.</action>
+    </release>
+    <release version="1.4.2" date="2026-10-23" description="Updated MCP server integrations for the renamed Machai process tooling and provider APIs.">
+      <action dev="dev" type="refactor">Migrated MCP server provider integrations to the renamed Machai process provider and tooling APIs.</action>
+    </release>
     <release version="1.4" date="2026-09-01">
       <action dev="dev" type="add">Added selective tool registration for MCP servers.</action>
       <action dev="dev" type="update">Renamed tools and parameters to use kebab-case names consistently.</action>
     </release>
     <release version="1.2" date="2026-06-30" description="Enhances Bindex tooling, configuration handling, and project automation capabilities while improving reliability across workflows.">
       <action dev="dev" type="add">Added an MCP server module with stateless and streamable server support, configurable parameters, prompt publishing, and server-specific credential handling.</action>
-    </release>
-    <release version="1.4.2" date="2026-10-23" description="Updated MCP server integrations for the renamed Machai process tooling and provider APIs.">
-      <action dev="dev" type="refactor">Migrated MCP server provider integrations to the renamed Machai process provider and tooling APIs.</action>
     </release>
   </body>
 </document>

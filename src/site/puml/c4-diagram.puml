@@ -15,7 +15,7 @@ LAYOUT_LEFT_RIGHT()
 title Machai MCP Server — C4 Component Diagram
 
 System_Ext(mcpClient, "MCP Client", "IDE, AI assistant, or other MCP consumer")
-System_Ext(configuration, "Configuration Files", "mcp-server.properties selects custom_configuration; mcp.properties is the default; --config overrides the selected file")
+System_Ext(configuration, "Configuration Files", "Properties provide server and tool settings; --config explicitly selects a configuration file")
 System_Ext(projectWorkspace, "Project Workspace", "Directory supplied with --projectDir or resolved by functions from request parameters")
 
 ' External components are in-process dependencies, not remote services.
@@ -54,7 +54,8 @@ Rel(statelessServer, functionTools, "Loads enabled functions into stateless adap
 Rel(streamableServer, functionTools, "Loads enabled functions into streamable adapter")
 Rel(adapterCore, functionTools, "Invokes tool and prompt functions with workspace and configuration")
 Rel(transportAdapters, functionTools, "Invokes stateless resource functions with URI, workspace, and configuration")
-Rel(functionTools, projectWorkspace, "Operates on configured or request-specific project files")
+Rel(adapterCore, projectWorkspace, "Passes configured or request-specific workspace to tool and prompt functions")
+Rel(transportAdapters, projectWorkspace, "Passes workspace to stateless resource functions")
 
 Rel(mcpClient, stdioServer, "Exchanges MCP messages", "stdin/stdout")
 Rel(mcpClient, statelessServer, "Calls MCP endpoints", "HTTP")

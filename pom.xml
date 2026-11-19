@@ -5,18 +5,20 @@
 	<parent>
 		<groupId>org.machanism.machai</groupId>
 		<artifactId>machai</artifactId>
-		<version>1.4.3</version>
+		<version>1.4.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>machai-mcp-server</artifactId>
 	<name>Machai MCP Server</name>
+	
+	<!-- @guidance: Summarize the `src/site/markdown/index.md` introduction
+	section and put this conten to the `description` tag.  -->
 	<description>
-		A server implementation for the Model Context Protocol (MCP) using the
-		Machai AI framework.
-		Provides integration with GenAI tools and supports both HTTP and STDIO
-		interfaces for AI-powered tool execution and orchestration.
-		Does not include its own tools for publication and requires
-		the use of additional libraries implementing functional tools and
-		prompts.
+		A Java 17 Model Context Protocol (MCP) server built on the Machai AI
+		framework. It bridges MCP clients with Machai functional tools and prompts,
+		handling capability discovery, schema adaptation, and request routing over
+		STDIO or HTTP. Domain-specific tools and prompts are provided by additional
+		runtime libraries, keeping the server focused on reusable orchestration
+		rather than bundling its own tools.
 	</description>
 
 	<profiles>
@@ -113,7 +115,7 @@
 		<dependency>
 			<groupId>org.machanism.machai</groupId>
 			<artifactId>genai-client</artifactId>
-			<version>1.4.3</version>
+			<version>1.4.4-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
